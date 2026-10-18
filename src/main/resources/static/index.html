@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>SGA-EBA – Centro Ebenezer Academy</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+  <link href="css/style.css" rel="stylesheet">
+</head>
+<body>
+<!-- LOGIN / RECUPERAR (UC01) -->
+<div id="auth" class="row g-0 min-vh-100">
+  <div class="col-lg-6 d-none d-lg-flex auth-side flex-column justify-content-center p-5 text-white">
+    <div class="logo mb-3">EBA</div>
+    <h2 class="fw-bold">Sistema de Gestão Académica</h2>
+    <p class="opacity-75">Centro Ebenezer Academy · Maputo<br>Acompanhe a vida escolar sem sair de casa.</p>
+    <ul class="list-unstyled mt-3 vstack gap-2">
+      <li><i class="bi bi-check-circle me-2"></i>Notas, testes e faltas em tempo real</li>
+      <li><i class="bi bi-check-circle me-2"></i>Pagamento por M-Pesa, e-Mola ou transferência</li>
+      <li><i class="bi bi-check-circle me-2"></i>Recibos e notificações automáticas</li>
+      <li><i class="bi bi-check-circle me-2"></i>Inscrição online de novos alunos</li>
+    </ul>
+  </div>
+  <div class="col-lg-6 d-flex align-items-center justify-content-center p-3 bg-light">
+    <div class="card shadow-sm w-100" style="max-width:420px"><div class="card-body p-4">
+      <form id="fLogin">
+        <h4 class="text-eba">Iniciar sessão</h4>
+        <p class="text-muted small">Introduza as suas credenciais para aceder ao portal do seu perfil.</p>
+        <label class="form-label small fw-semibold">Email</label>
+        <input id="lEmail" type="email" class="form-control mb-3" required autocomplete="username">
+        <label class="form-label small fw-semibold">Palavra-passe</label>
+        <input id="lSenha" type="password" class="form-control mb-2" required autocomplete="current-password">
+        <div class="text-end mb-3"><a href="#" id="aRec" class="small text-eba">Recuperar palavra-passe</a></div>
+        <div id="lErr" class="alert alert-danger py-2 d-none"></div>
+        <button class="btn btn-eba w-100">Entrar</button>
+        <div class="alert alert-success small mt-3 mb-0 py-2"><b>Demo</b> (senha <code>1234</code>):<br>encarregado@ · secretaria@ · professor@ · diretor@<code>eba.co.mz</code></div>
+      </form>
+      <form id="fRec" class="d-none">
+        <h4 class="text-eba">Recuperar palavra-passe</h4>
+        <p class="text-muted small">Indique o email registado. Receberá um link de redefinição.</p>
+        <input id="rEmail" type="email" class="form-control mb-3" placeholder="Email registado" required>
+        <div id="rMsg" class="alert alert-success py-2 d-none"></div>
+        <button class="btn btn-eba w-100 mb-2">Enviar link de redefinição</button>
+        <a href="#" id="aVoltar" class="small text-eba"><i class="bi bi-arrow-left"></i> Voltar ao início de sessão</a>
+      </form>
+    </div></div>
+  </div>
+</div>
+
+<!-- APLICAÇÃO (portais) -->
+<div id="app" class="d-none">
+  <nav class="navbar topbar sticky-top px-3">
+    <button class="btn btn-sm text-white d-lg-none me-2" data-bs-toggle="offcanvas" data-bs-target="#side"><i class="bi bi-list fs-4"></i></button>
+    <span class="navbar-brand text-white d-flex align-items-center gap-2 mb-0"><span class="logo sm">EBA</span><span class="fw-bold">SGA-EBA</span><small class="d-none d-md-inline opacity-75">Centro Ebenezer Academy</small></span>
+    <div class="ms-auto d-flex align-items-center gap-3 text-white">
+      <div class="text-end lh-sm d-none d-sm-block"><div class="fw-semibold" id="uNome"></div><small class="opacity-75" id="uPerfil"></small></div>
+      <button class="btn btn-sm btn-outline-light" id="bSair"><i class="bi bi-box-arrow-right"></i><span class="d-none d-md-inline"> Terminar sessão</span></button>
+    </div>
+  </nav>
+  <div class="d-flex">
+    <aside id="side" class="offcanvas-lg offcanvas-start sidebar" tabindex="-1">
+      <div class="offcanvas-header d-lg-none"><b>Menu</b><button class="btn-close" data-bs-dismiss="offcanvas"></button></div>
+      <div class="offcanvas-body flex-column p-2"><small class="text-uppercase text-muted fw-bold px-2 mb-1" id="portal"></small><div id="menu" class="nav flex-column gap-1"></div></div>
+    </aside>
+    <main id="view" class="flex-grow-1 p-3 p-lg-4 overflow-x-hidden"></main>
+  </div>
+</div>
+
+<div class="modal fade" id="modal" tabindex="-1"><div class="modal-dialog modal-dialog-centered modal-dialog-scrollable"><div class="modal-content">
+  <div class="modal-header"><h5 class="modal-title" id="mt"></h5><button class="btn-close" data-bs-dismiss="modal"></button></div>
+  <div class="modal-body" id="mb"></div><div class="modal-footer" id="mf"></div>
+</div></div></div>
+<div class="toast-container position-fixed bottom-0 end-0 p-3"><div id="toast" class="toast align-items-center border-0" role="alert"><div class="d-flex"><div class="toast-body" id="tb"></div><button class="btn-close me-2 m-auto" data-bs-dismiss="toast"></button></div></div></div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
