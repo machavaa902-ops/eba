@@ -33,7 +33,7 @@ class AuthInterceptor implements HandlerInterceptor {
         if (u == null) { res.sendError(401); return false; }
         String p = req.getRequestURI();
         String need = p.startsWith("/api/encarregado") ? "ENCARREGADO" : p.startsWith("/api/secretaria") ? "SECRETARIA"
-                : p.startsWith("/api/professor") ? "PROFESSOR" : p.startsWith("/api/diretor") ? "DIRETOR" : null;
+                : p.startsWith("/api/professor") ? "PROFESSOR" : p.startsWith("/api/diretor") ? "DIRETOR" : p.startsWith("/api/admin") ? "ADMIN" : null;
         if (need != null && !need.equals(u.perfil)) { res.sendError(403); return false; }
         if (!"GET".equals(req.getMethod())) log.info("{} ({}) {} {}", u.email, u.perfil, req.getMethod(), p);
         req.setAttribute("u", u);
@@ -51,5 +51,6 @@ class AuthInterceptor implements HandlerInterceptor {
 
 @RestControllerAdvice class Erros {
     @ExceptionHandler(RegraException.class) ResponseEntity<Map<String,String>> regra(RegraException e) { return ResponseEntity.status(e.status).body(Map.of("erro", e.getMessage())); }
+    @ExceptionHandler(org.springframework.web.multipart.MaxUploadSizeExceededException.class) ResponseEntity<Map<String,String>> grande(Exception e) { return ResponseEntity.status(413).body(Map.of("erro", "Ficheiro demasiado grande (máximo 20 MB).")); }
     @ExceptionHandler(Exception.class) ResponseEntity<Map<String,String>> geral(Exception e) { return ResponseEntity.badRequest().body(Map.of("erro", "Pedido inválido: " + e.getMessage())); }
 }

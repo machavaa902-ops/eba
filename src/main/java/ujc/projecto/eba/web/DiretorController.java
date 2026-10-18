@@ -26,9 +26,10 @@ public class DiretorController {
         if (!falta.isEmpty()) throw new RegraException(400, "Dados obrigatórios em falta: " + String.join(", ", falta) + ".");
         String email = s(b, "email").toLowerCase();
         if (users.findByEmail(email).filter(x -> !x.id.equals(u.id)).isPresent()) throw new RegraException(409, "Já existe um utilizador com esse email.");
-        u.nome = s(b, "nome"); u.email = email; u.contacto = s(b, "contacto"); u.especialidade = s(b, "especialidade"); u.dataContratacao = d(b, "dataContratacao");
+        u.nome = s(b, "nome"); u.email = email; u.contacto = s(b, "contacto"); u.especialidade = ac.exigirDisciplina(s(b, "especialidade")); u.dataContratacao = d(b, "dataContratacao");
         if (novo) Seguranca.definir(u, "1234");  // palavra-passe inicial (enviada por email na versão final)
-        return prof(users.save(u));
+        Utilizador g = users.save(u); ac.podarAtribuicoes(g);
+        return prof(g);
     }
     @GetMapping("/estatisticas")
     public Map<String,Object> estatisticas() {
@@ -37,7 +38,7 @@ public class DiretorController {
             if ("PAGA".equals(m.estado)) { porMes[m.mes - 1] += m.valor + m.multa; if (m.mes == hoje.getMonthValue()) receitaMes += m.valor + m.multa; }
             else if (!"PENDENTE".equals(fin.estado(m))) divida += m.valor + fin.multa(m);
         }
-        List<Map<String,Object>> top = alunos.findAll().stream().map(a -> { Map<String,Object> m = new LinkedHashMap<>(); m.put("nome", a.nome); m.put("turma", ac.nomeTurma(a.turmaId)); m.put("media", Util.r1(ac.mediaGeral(a.id))); return m; })
+        List<Map<String,Object>> top = alunos.findAll().stream().map(a -> { Map<String,Object> m = new LinkedHashMap<>(); m.put("nome", a.nome); m.put("turma", ac.nomeTurmas(a.id)); m.put("media", Util.r1(ac.mediaGeral(a.id))); return m; })
                 .filter(m -> (double) m.get("media") > 0).sorted((x, y) -> Double.compare((double) y.get("media"), (double) x.get("media"))).limit(5).collect(Collectors.toList());
         Map<String,Object> r = new LinkedHashMap<>();
         r.put("alunos", alunos.count()); r.put("turmas", turmas.count()); r.put("receitaMes", Util.r2(receitaMes)); r.put("dividas", Util.r2(divida));
@@ -48,7 +49,7 @@ public class DiretorController {
         StringBuilder sb = new StringBuilder("\uFEFF");
         if ("academico".equals(tipo)) {
             sb.append("Aluno;Turma;Media geral;Situacao\n");
-            for (Aluno a : alunos.findAll()) { double md = ac.mediaGeral(a.id); sb.append(a.nome).append(';').append(ac.nomeTurma(a.turmaId)).append(';').append(Util.r1(md)).append(';').append(md == 0 ? "Sem notas" : AcademicoService.aprovado(md) ? "Aprovado" : "Nao aprovado").append('\n'); }
+            for (Aluno a : alunos.findAll()) { double md = ac.mediaGeral(a.id); sb.append(a.nome).append(';').append(ac.nomeTurmas(a.id)).append(';').append(Util.r1(md)).append(';').append(md == 0 ? "Sem notas" : AcademicoService.aprovado(md) ? "Aprovado" : "Nao aprovado").append('\n'); }
         } else {
             sb.append("Aluno;Mes;Ano;Valor;Multa;Estado;Recibo\n");
             for (Mensalidade m : mens.findAll()) { Map<String,Object> v = fin.view(m); String al = alunos.findById(m.alunoId).map(x -> x.nome).orElse("?");

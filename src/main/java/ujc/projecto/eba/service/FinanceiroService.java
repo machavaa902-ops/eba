@@ -11,9 +11,16 @@ import static ujc.projecto.eba.service.Util.*;
 public class FinanceiroService {
     public static final double VALOR = 2500, TAXA_MULTA = 0.10; public static final int DIA_LIMITE = 8;   // RD06
     public static final String[] MESES = {"Janeiro","Fevereiro","Março","Abril","Maio","Junho","Julho","Agosto","Setembro","Outubro","Novembro","Dezembro"};
-    private final MensalidadeRepo mens; private final AlunoRepo alunos; private final AcademicoService ac; private final PagamentoGateway gw;
+    private final MensalidadeRepo mens; private final AlunoRepo alunos; private final AcademicoService ac; private final PagamentoGateway gw; private final ContaPagamentoRepo contas;
 
-    public FinanceiroService(MensalidadeRepo m, AlunoRepo a, AcademicoService ac, PagamentoGateway gw) { mens = m; alunos = a; this.ac = ac; this.gw = gw; }
+    public FinanceiroService(MensalidadeRepo m, AlunoRepo a, AcademicoService ac, PagamentoGateway gw, ContaPagamentoRepo c) { mens = m; alunos = a; this.ac = ac; this.gw = gw; contas = c; }
+
+    /** Contas (nome + número) para onde o encarregado deve depositar, por método de pagamento. */
+    public List<Map<String,Object>> contas() {
+        List<String> ordem = List.of("MPESA", "EMOLA", "TRANSFERENCIA");
+        return contas.findAll().stream().sorted(Comparator.comparingInt(c -> ordem.indexOf(c.metodo))).map(c -> {
+            Map<String,Object> m = new LinkedHashMap<>(); m.put("id", c.id); m.put("metodo", c.metodo); m.put("titular", c.titular); m.put("numero", c.numero); m.put("banco", c.banco); return m; }).collect(Collectors.toList());
+    }
 
     public static LocalDate vencimento(Mensalidade m) { return LocalDate.of(m.ano, m.mes, DIA_LIMITE); }
     public double multa(Mensalidade m) {

@@ -17,10 +17,9 @@ public class SecretariaController {
 
     @GetMapping("/turmas") public List<Map<String,Object>> turmas() { return ac.turmas(null); }
     @PostMapping("/turmas") public Map<String,Object> novaTurma(@RequestBody Map<String,Object> b) {
-        Turma t = new Turma(); t.codigo = s(b, "codigo"); t.nivel = s(b, "nivel"); t.turno = s(b, "turno"); t.anoLetivo = Integer.parseInt(Objects.requireNonNullElse(s(b, "anoLetivo"), "" + LocalDate.now().getYear()));
+        Turma t = new Turma(); t.codigo = s(b, "codigo"); t.nivel = s(b, "nivel"); t.turno = Objects.requireNonNullElse(s(b, "turno"), "Manhã"); t.anoLetivo = Integer.parseInt(Objects.requireNonNullElse(s(b, "anoLetivo"), "" + LocalDate.now().getYear()));
         t.capacidade = Integer.parseInt(Objects.requireNonNullElse(s(b, "capacidade"), "30"));
-        if (t.codigo == null || t.nivel == null || t.capacidade < 1) throw new RegraException(400, "Indique código, nível e capacidade.");
-        return ac.turmaView(turmas.save(t));
+        return ac.turmaView(ac.guardarTurma(t));
     }
     @GetMapping("/alunos") public List<Map<String,Object>> alunos(@RequestParam(required = false) String estado) {
         return (estado == null ? alunos.findAll() : alunos.findByEstado(estado)).stream().map(a -> {
@@ -40,8 +39,10 @@ public class SecretariaController {
             encId = enc.id;
         }
         Aluno a = new Aluno(); a.nome = s(b, "nome"); a.nivel = s(b, "nivel"); a.genero = s(b, "genero"); a.dataNascimento = d(b, "nascimento");
-        return ac.view(ac.registarAluno(a, l(b, "turmaId"), encId, "ATIVO"));
+        return ac.view(ac.registarAluno(a, ids(b, "turmaIds"), encId, "ATIVO"));
     }
+    /** Altera as turmas de um aluno (pode pertencer a várias). */
+    @PutMapping("/alunos/{id}/turmas") public Map<String,Object> turmasDoAluno(@PathVariable Long id, @RequestBody Map<String,Object> b) { return ac.view(ac.definirTurmas(id, ids(b, "turmaIds"))); }
     @PostMapping("/inscricoes/{id}/validar") public Map<String,Object> validar(@PathVariable Long id) {
         Aluno a = alunos.findById(id).orElseThrow(() -> new RegraException(404, "Aluno não encontrado."));
         a.estado = "ATIVO"; alunos.save(a); ac.notificar(a.encarregadoId, "A inscrição de " + a.nome + " foi validada."); return ac.view(a);
@@ -50,7 +51,7 @@ public class SecretariaController {
         double recebido = 0; int pagas = 0, pend = 0, atraso = 0; List<Map<String,Object>> rows = new ArrayList<>();
         for (Mensalidade m : mens.findByAnoAndMes(ano, mes)) {
             Map<String,Object> v = new LinkedHashMap<>(fin.view(m)); Aluno a = alunos.findById(m.alunoId).orElse(null);
-            v.put("aluno", a == null ? "?" : a.nome); v.put("turma", a == null ? "—" : ac.nomeTurma(a.turmaId)); rows.add(v);
+            v.put("aluno", a == null ? "?" : a.nome); v.put("turma", a == null ? "—" : ac.nomeTurmas(a.id)); rows.add(v);
             switch ((String) v.get("estado")) { case "PAGA" -> { pagas++; recebido += m.valor + m.multa; } case "ATRASADA" -> atraso++; default -> pend++; }
         }
         return Map.of("recebido", Util.r2(recebido), "pagas", pagas, "pendentes", pend, "atrasadas", atraso, "linhas", rows);

@@ -1,17 +1,64 @@
-:root{--eba:#14803c;--eba-d:#0f5f2d;--eba-l:#e8f5ec}
-body{background:#f4f8f5}
+/* Ebenezer Academy – cores do logotipo (azul + preto) e tipografia
+   Poppins: títulos e marca (geométrica, como o logotipo) · Inter: texto, tabelas e formulários (legibilidade) */
+:root{
+  --eba:#1565b5; --eba-d:#0d4a8a; --eba-l:#e8f1fb; --ink:#0f1b2d; --muted:#5b6b80; --line:#dbe6f2;
+  --bs-body-font-family:'Inter',system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;
+  --bs-body-color:#1c2a3d; --bs-body-font-size:.95rem; --bs-body-line-height:1.55;
+  --font-head:'Poppins','Inter',system-ui,sans-serif;
+}
+html{-webkit-text-size-adjust:100%}
+body{background:#f3f7fc;font-family:var(--bs-body-font-family);letter-spacing:0;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;text-rendering:optimizeLegibility}
+h1,h2,h3,h4,h5,h6,.h1,.h2,.h3,.h4,.h5,.h6{font-family:var(--font-head);font-weight:600;letter-spacing:-.012em;line-height:1.25;color:var(--ink)}
+h4{font-size:1.35rem}h6{font-size:1rem;letter-spacing:-.005em}
 .text-eba{color:var(--eba)!important}
-.btn-eba{background:var(--eba);color:#fff;border:0}.btn-eba:hover{background:var(--eba-d);color:#fff}
-.auth-side{background:linear-gradient(160deg,#0f5f2d,#1a9a4d)}
-.logo{background:#fff;color:var(--eba);font-weight:800;border-radius:10px;padding:8px 12px;display:inline-block;width:fit-content}.logo.sm{padding:2px 8px;font-size:.85rem}
-.topbar{background:var(--eba);min-height:56px}
-.sidebar{width:240px;flex:0 0 240px;background:#fff;border-right:1px solid #dfe9e2;min-height:calc(100vh - 56px)}
-@media(min-width:992px){.sidebar{position:sticky;top:56px;height:calc(100vh - 56px)}}
-.sidebar .nav-link{color:#334;border-radius:8px;padding:.55rem .75rem}
-.sidebar .nav-link.active,.sidebar .nav-link:hover{background:var(--eba-l);color:var(--eba);font-weight:600}
-.kpi{border:0;box-shadow:0 1px 3px rgba(0,0,0,.08)}.kpi .bi{font-size:1.6rem;color:var(--eba)}
-.card{border:0;box-shadow:0 1px 3px rgba(0,0,0,.08)}
+p{margin-bottom:.75rem}.text-muted{color:var(--muted)!important}
+small,.small{letter-spacing:.005em}
+.form-label,label.small{font-weight:500;letter-spacing:.005em}
+.form-control,.form-select{font-size:.95rem;border-color:#cbd8e8}
+.form-control:focus,.form-select:focus{border-color:var(--eba);box-shadow:0 0 0 .2rem rgba(21,101,181,.15)}
+.btn{font-weight:500;letter-spacing:.01em}
+.btn-eba{background:var(--eba);color:#fff;border:0}.btn-eba:hover,.btn-eba:focus{background:var(--eba-d);color:#fff}
+.btn-outline-success{--bs-btn-color:var(--eba);--bs-btn-border-color:var(--eba);--bs-btn-hover-bg:var(--eba);--bs-btn-hover-border-color:var(--eba);--bs-btn-hover-color:#fff;--bs-btn-active-bg:var(--eba-d);--bs-btn-active-border-color:var(--eba-d);--bs-btn-active-color:#fff;--bs-btn-disabled-color:var(--eba);--bs-btn-disabled-border-color:var(--eba)}
+a{color:var(--eba)}a:hover{color:var(--eba-d)}
+.card{border:0;box-shadow:0 1px 3px rgba(15,27,45,.08);border-radius:12px}
+.table{font-variant-numeric:tabular-nums}
+.table thead th{font-size:.78rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);white-space:nowrap}
+.badge{font-weight:500;letter-spacing:.02em}
+
+/* marca */
+.brand-word{font-family:var(--font-head);font-weight:600;font-size:.95rem;letter-spacing:.16em;text-transform:uppercase;color:var(--ink);white-space:nowrap}
+.brand-word b{color:var(--eba);font-weight:700}
+
+/* barra superior e menu lateral */
+.topbar{background:#fff;border-bottom:1px solid var(--line);min-height:64px;box-shadow:0 1px 2px rgba(15,27,45,.04)}
+.topbar img{display:block}
+.sidebar{width:248px;flex:0 0 248px;background:#fff;border-right:1px solid var(--line);min-height:calc(100vh - 64px)}
+@media(min-width:992px){.sidebar{position:sticky;top:64px;height:calc(100vh - 64px)}}
+.sidebar .nav-link{color:#2a3a50;border-radius:8px;padding:.58rem .8rem;font-weight:500;font-size:.92rem}
+.sidebar .nav-link .bi{color:var(--muted)}
+.sidebar .nav-link.active,.sidebar .nav-link:hover{background:var(--eba-l);color:var(--eba)}
+.sidebar .nav-link.active .bi,.sidebar .nav-link:hover .bi{color:var(--eba)}
+.sidebar .portal-lbl{font-size:.7rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.kpi .bi{font-size:1.6rem;color:var(--eba)}
+.kpi .fs-5{font-family:var(--font-head);font-weight:600;letter-spacing:-.01em}
 .nota-in{width:80px;text-align:center}
-.bars{display:flex;align-items:flex-end;gap:6px;height:160px}.bars div{flex:1;background:#8fd0a5;border-radius:4px 4px 0 0;min-height:2px}.bars div.cur{background:var(--eba)}
+.bars{display:flex;align-items:flex-end;gap:6px;height:160px}.bars div{flex:1;background:#9cc3ea;border-radius:4px 4px 0 0;min-height:2px}.bars div.cur{background:var(--eba)}
 .bar-lbl{display:flex;gap:6px;font-size:.7rem;color:#667}.bar-lbl span{flex:1;text-align:center}
+
+/* login / recuperar */
+.auth-wrap{background:radial-gradient(1200px 500px at 50% -10%,#dbe9f9 0%,#f3f7fc 60%)}
+.auth-card{max-width:430px;border-radius:16px;box-shadow:0 10px 30px rgba(21,101,181,.12)}
+.auth-logo{width:min(210px,60%);height:auto}
+
+/* página inicial */
+.home-nav{display:flex;align-items:center;justify-content:space-between;padding:1rem 0}
+.hero{padding:3rem 0 2.5rem}
+.hero h1{font-size:clamp(1.9rem,4.2vw,2.9rem);font-weight:700;letter-spacing:-.025em;line-height:1.15}
+.hero h1 span{color:var(--eba)}
+.hero p.lead{color:var(--muted);font-size:1.1rem;max-width:34rem}
+.hero-logo{width:min(340px,80%);height:auto}
+.feat{height:100%;padding:1.4rem}.feat .bi{font-size:1.7rem;color:var(--eba)}
+.feat h6{margin-top:.7rem}
+.home-foot{border-top:1px solid var(--line);color:var(--muted);font-size:.85rem;padding:1.4rem 0;margin-top:2.5rem}
+
 @media print{body *{visibility:hidden}#mb,#mb *{visibility:visible}#mb{position:absolute;left:0;top:0;width:100%}}
